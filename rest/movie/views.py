@@ -25,7 +25,7 @@ def movies(request):
         description = request.POST['description']
         movie = Movie(name=name, description=description)
         movie.save()
-        return redirect(f'http://{ui_host}/movie/')
+        return HttpResponse(status=200)
 
 
 # Create your views here.
