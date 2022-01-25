@@ -9,6 +9,10 @@ from movie.serializers import MovieSerializer
 from django.utils import timezone
 from pprint import pprint
 import requests
+import os
+
+# host = 'rest'
+rest_host = os.environ.get('REST_HOST', '127.0.0.1:8000')
 
 def make_static_img_src(id):
     text = "{%static 'movie/images/" + str(id) + ".jpg' %}"
@@ -16,7 +20,7 @@ def make_static_img_src(id):
     
 def movie(request):
     if request.method == 'GET':
-        response = requests.get('http://127.0.0.1:8000/movie/')
+        response = requests.get(f'http://{rest_host}/movie/')
         data = response.json()
         return render(request, 'movie/index.html', {'movie_list': data})
 
@@ -30,6 +34,6 @@ def upload(request):
 
 def detail(request, id):
     if request.method == 'GET':
-        response = requests.get('http://127.0.0.1:8000/movie/' + str(id))
+        response = requests.get(f'http://{rest_host}/movie/' + str(id))
         data = response.json()
         return render(request, 'movie/detail.html', {'movie': data})
