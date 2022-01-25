@@ -36,3 +36,72 @@ spec:
     port: 80
     targetPort: 8000
     nodePort: 30801
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rest
+  namespace: movie
+  labels:
+    app: rest
+spec:
+  selector:
+    matchLabels:
+      app: rest
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rest
+    spec:
+      containers:
+      - name: rest
+        image: fodrh1201/django-rest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: REST_HOST
+          value: rest
+        - name: UI_HOST
+          value: ui
+        ports:
+        - containerPort: 8000
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+  namespace: movie
+  labels:
+    app: ui
+spec:
+  selector:
+    matchLabels:
+      app: ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+      - name: ui
+        image: fodrh1201/django-ui
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: REST_HOST
+          value: rest
+        - name: UI_HOST
+          value: ui
+        ports:
+        - containerPort: 8000
